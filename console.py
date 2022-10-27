@@ -5,6 +5,12 @@ This is The Console Module.
 """
 import cmd, json
 from models.base_model import BaseModel
+from models.user import User
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
 
 class HBNBCommand(cmd.Cmd):
     prompt: str = "(hbnb)"
@@ -28,12 +34,13 @@ class HBNBCommand(cmd.Cmd):
         "EOF or ctrl^D command to exit the program"
         return True
     def do_create(self, line):
+        class_name = ['BaseModel', 'State', 'User', 'City', 'Amenity', 'Place', 'Review']
         if not line:
             print('** class name missing **')
-        elif not self.is_valid_model(line):
+        elif not line in class_name:
             print("** class doesn't exist **")
         else:
-            base = BaseModel()
+            base = eval(f'{line}()')
             base.save()
             print(base.id)
     def do_show(self, line):
