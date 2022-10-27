@@ -5,22 +5,15 @@ This is the File Storage Engine Model.
 """
 
 import json
-
+from models.base_model import BaseModel
 
 class FileStorage:
     """
     Represent the File Storage Engine.
     """
 
-    __file_path = ''
+    __file_path = 'file.json'
     __objects = {}
-
-    def __init__(self, file_path=None) -> None:
-        """
-        Initialize the File Storage.
-        """
-        FileStorage.__file_path = file_path
-        FileStorage.__objects = {}
 
     def all(self):
         """
@@ -34,20 +27,31 @@ class FileStorage:
         """
         if not obj:
             return
-        key = obj.__class__.__name__ + '.' + obj.id
-        self.__objects[key] = obj.to_dict()
-        print(self.__objects)
+        attr = obj.to_dict()
+        key = attr['__class__'] + '.' + attr['id']
+        self.__objects[key] = obj
+
     def save(self):
         """
         Save the __objects into file storage.
         """
-        with open('file.json', 'w', encoding='utf-8') as f:
-            f.write(json.dumps(self.__objects))
+        objs = {}
+        for key in self.__objects:
+            objs[key] = self.__objects[key].to_dict() 
+        with open(self.__file_path, 'w', encoding='utf-8') as f:
+            json.dump(objs, f, indent=8)
 
     def reload(self):
         """
         Convert json file to dictionary.
         """
-        if not self.__file_path:
-            return
-        self.__objects = json.load(self.__file_path)
+        try:
+            with open(self.__file_path, 'r', encoding='utf-8') as f:
+                objs = json.loads(f.read())
+                for key, obj in objs.items():
+                    if not key in self.__objects:
+                        name = obj['__class__']
+                        base = eval(f"{name}(**obj)")
+                        self.new(base)
+        except Exception as err:
+            pass

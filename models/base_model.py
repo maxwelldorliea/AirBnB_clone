@@ -1,51 +1,58 @@
-#!/usr/bin/env python3
+#!/bin/python3
 
 """
-This is the Base Model Of All Models.
+This is the Base Model For All Models.
 """
-import uuid
-import datetime
-from models import storage
+
+from datetime import datetime as dtime
+from uuid import uuid4
+import models
+
 
 class BaseModel:
     """
-    Represent the Base Model.
+    This Model Implement All common attribute for other model.
     """
 
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, *arg, **kwarg) -> None:
         """
-        Initialized the Base Model.
+        Initialize the BaseModel.
         """
-        if kwargs:
-            kpairs = kwargs.copy()
-            del kpairs['__class__']
-            for k in kpairs:
-                setattr(self, k, kpairs[k])
+        if kwarg:
+            attr = kwarg.copy()
+            del attr['__class__']
+            attr['created_at'] = dtime.strptime(attr['created_at'], '%Y-%m-%dT%H:%M:%S.%f')
+            attr['updated_at'] = dtime.strptime(attr['updated_at'], '%Y-%m-%dT%H:%M:%S.%f')
+
+            for k in attr:
+                setattr(self, k, attr[k])
         else:
-            self.id = str(uuid.uuid4())
-            self.created_at = datetime.datetime.now()
-            self.updated_at = datetime.datetime.now()
-            storage.new(self)
+            self.id = str(uuid4())
+            self.created_at = dtime.now()
+            self.updated_at = dtime.now()
+            models.storage.new(self)
 
     def __str__(self) -> str:
         """
-        Return string representation Base Model.
+        Return the string representation of BaseModel.
         """
-        return f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}"
+        return f'[{self.__class__.__name__}] ({self.id}) {self.__dict__}'
 
     def save(self) -> None:
         """
-        Update the Base Model.
+        Update the BaseModel Data.
         """
-        self.updated_at = datetime.datetime.now()
-        #storage.save()
-    
-    def to_dict(self):
+        self.updated_at = dtime.now()
+        models.storage.save()
+
+    def to_dict(self) -> dict:
         """
-        Return the dictionary representation Of Base Model
+        Return the dictionary representation of BaseModel.
         """
-        attr = self.__dict__
+        attr = self.__dict__.copy()
         attr['__class__'] = self.__class__.__name__
-        attr['updated_at'] = attr['updated_at'].isoformat()
-        attr['created_at'] = attr['created_at'].isoformat()
+        if not type(attr['created_at']) is str:
+            attr['created_at'] = attr['created_at'].isoformat()
+        if not type(attr['updated_at']) is str:
+            attr['updated_at'] = attr['updated_at'].isoformat()
         return attr
