@@ -111,5 +111,31 @@ class HBNBCommand(cmd.Cmd):
             except Exception:
                 pass
 
+    def do_update(self, line):
+        arg = line.split()
+        with open('file.json', 'r', encoding='utf-8') as f:
+            objs = json.loads(f.read())
+        if not line:
+            print('** class name missing **')
+        elif not self.is_valid_model(arg[0]):
+            print("** class doesn't exist **")
+        elif len(arg) < 2:
+            print("** instance id missing **")
+        elif not arg[0] + '.' + arg[1] in objs:
+            print("** no instance found **")
+        elif len(arg) < 3:
+            print("** attribute name missing **")
+        elif len(arg) < 4:
+            print("** value missing **")
+        else:
+            k, val = arg[2], arg[3].replace('"', '').replace("'", "")
+            key = arg[0] + '.' + arg[1]
+            obj = objs[key]
+            obj[k] = val
+            with open('file.json', 'w', encoding='utf-8') as f:
+                objs = json.dump(objs, f)
+
+
+
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
