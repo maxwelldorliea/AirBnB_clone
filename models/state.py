@@ -1,15 +1,11 @@
 #!/bin/python3
 
-"""
-This is the State Module.
-"""
+"""This is the State Module."""
 
 from models.base_model import BaseModel
 
 
 class State(BaseModel):
-    """
-    This class represent all States/counties.
-    """
+    """This class represent all States/counties."""
 
-    name : str = ''
+    name: str = ''
