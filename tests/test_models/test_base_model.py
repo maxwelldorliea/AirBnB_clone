@@ -24,3 +24,11 @@ class TestBaseModel(unittest.TestCase):
     def test_dict_updated_at(self):
         """Test if updated_at is a str."""
         self.assertIsInstance(self.updated_at, str)
+
+    def test_to_dict(self):
+        """Test if to_dict return a dict."""
+        self.assertIsInstance(self.objs_dict, dict)
+
+    def test_class_name(self):
+        """Test if __class__ is in dict return by to_dict."""
+        self.assertIn("__class__", self.objs_dict.keys())
