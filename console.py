@@ -25,6 +25,10 @@ class HBNBCommand(cmd.Cmd):
         arg = arg.replace('.', ' ').replace(')', '').replace(",", "")
         return arg
 
+    def emptyline(self) -> None:
+        """Do nothing when empty line and enter is receive."""
+        return
+
     def default(self, line: str) -> None:
         """Find the right cmd and execute it."""
         cmd = {
