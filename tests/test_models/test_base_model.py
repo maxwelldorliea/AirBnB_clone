@@ -57,3 +57,7 @@ class TestBaseModel(unittest.TestCase):
     def test_inst_is_base_model(self):
         """Test if b1 is instance of BaseModel."""
         self.assertIsInstance(self.b1, base_model.BaseModel)
+
+    def test_id_is_str(self):
+        """Test if id is a str."""
+        self.assertIsInstance(self.b1.id, str)
