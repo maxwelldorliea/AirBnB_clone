@@ -17,6 +17,10 @@ class HBNBCommand(cmd.Cmd):
     file = None
     class_name = ['BaseModel', 'State', 'User', 'City', 'Amenity', 'Place', 'Review']
 
+    def parse_input(self, cmd):
+        arg = cmd.replace('(', ' ').replace('"', '').replace("'", "").replace('.', ' ').replace(')', '').replace(",", "")
+        return arg
+
     def default(self, line: str) -> None:
         cmd = {
                 'all' : self.do_all,
@@ -25,12 +29,14 @@ class HBNBCommand(cmd.Cmd):
                 'destroy' : self.do_destroy,
                 'update' : self.do_update
             }
-        arg = line.replace('(', ' ').replace('"', '').replace("'", "").replace('.', ' ').replace(')', '').replace(",", "").split()
+        arg = self.parse_input(line).split()
+
+        if len(arg) < 2:
+            return super().default(line)
 
         if arg[1] in cmd:
             func = cmd[arg[1]]
-            arg[0], arg[1] = arg[1], arg[0]
-            func(" ".join(arg[1:]))
+            func(line)
         else:
             return super().default(line)
 
@@ -50,7 +56,7 @@ class HBNBCommand(cmd.Cmd):
             base.save()
             print(base.id)
     def do_show(self, line):
-        arg = line.replace('"', '').replace("'", "").split()
+        arg = self.parse_input(line).replace('show', '').split()
         if not line:
             print('** class name missing **')
         elif not arg[0] in self.class_name:
@@ -73,7 +79,7 @@ class HBNBCommand(cmd.Cmd):
                 print("** no instance found **")
     
     def do_destroy(self, line):
-        arg = line.replace('(', ' ').replace('.', ' ').replace(')', '').split()
+        arg = self.parse_input(line).replace('destroy', '').split()
         if not line:
             print('** class name missing **')
         elif not arg[0] in self.class_name:
@@ -95,36 +101,35 @@ class HBNBCommand(cmd.Cmd):
                 print("** no instance found **")
 
     def do_all(self, line):
-        if not line:
-            objs_arr = []
-            try:
-                with open('file.json', 'r', encoding='utf-8') as f:
+        line = self.parse_input(line).replace('all', '').replace(' ','')
+        objs = {}
+        objs_arr = []
+        try:
+            with open('file.json', 'r', encoding='utf-8') as f:
                     objs = json.loads(f.read())
-                for obj in objs.values():
-                    name = obj['__class__']
-                    inst = eval(f'{name}(**obj)')
-                    objs_arr.append(str(inst))
-                print(objs_arr)
-            except Exception:
+        except Exception:
                 pass
+        if not line:
+            for obj in objs.values():
+                name = obj['__class__']
+                inst = eval(f'{name}(**obj)')
+                objs_arr.append(str(inst))
+            print(objs_arr)
         elif not line in self.class_name:
             print("** class doesn't exist **")
         else:
-            objs_arr = []
-            try:
-                with open('file.json', 'r', encoding='utf-8') as f:
-                    objs = json.loads(f.read())
-                for obj in objs.values():
-                    name = obj['__class__']
-                    if name == line:
-                        inst = eval(f'{name}(**obj)')
-                        objs_arr.append(str(inst))
-                    print(objs_arr)
-            except Exception:
-                pass
+            for obj in objs.values():
+                name = obj['__class__']
+                if name == line:
+                    inst = eval(f'{name}(**obj)')
+                    objs_arr.append(str(inst))
+            print(objs_arr)
 
     def do_update(self, line):
-        arg = line.split()
+        arg1 = line.replace('update', '').replace('(', '').replace(')', '')
+        arg1 = arg1.replace('.', ' ').split(maxsplit=2)
+        line = self.parse_input(line).replace('update', '').split()
+        arg = line if len(line) > 3 else arg1
         try:
             with open('file.json', 'r', encoding='utf-8') as f:
                 objs = json.loads(f.read())
@@ -134,36 +139,37 @@ class HBNBCommand(cmd.Cmd):
                 print("** class doesn't exist **")
             elif len(arg) < 2:
                 print("** instance id missing **")
-            elif not arg[0] + '.' + arg[1] in objs:
+            elif not arg[0] + '.' + self.parse_input(arg[1]) in objs:
                 print("** no instance found **")
             elif len(arg) == 3:
                 try:
-                    new_obj = json.loads(arg[-1])
-                    key = arg[0] + '.' + arg[1]
+                    new_obj = json.loads(arg[-1].replace("'", '"'))
+                    key = arg[0] + '.' + self.parse_input(arg[1])
                     obj = objs[key]
-                    for k, v in new_obj.items():
-                        obj[k] = v
+                    for k in new_obj:
+                        obj[k] = new_obj[k]
                     with open('file.json', 'w', encoding='utf-8') as f:
-                        json.dump(objs, f)
+                        json.dump(objs, f, indent=4)
                     return
-                except Exception as err:
-                    print(err)
+                except Exception:
+                    pass
             elif len(arg) < 3:
                 print("** attribute name missing **")
             elif len(arg) < 4:
                 print("** value missing **")
             else:
                 k, val = arg[2], arg[3].replace('"', '').replace("'", "")
-                key = arg[0] + '.' + arg[1]
+                key = arg[0] + '.' + self.parse_input(arg[1])
                 obj = objs[key]
                 obj[k] = val
                 with open('file.json', 'w', encoding='utf-8') as f:
-                    json.dump(objs, f)
+                    json.dump(objs, f, indent=4)
         except Exception:
             pass
 
     def count(self, line):
         cnt = 0
+        line = self.parse_input(line).replace('count', '').replace(' ', '')
         if not line in self.class_name:
             print("** class doesn't exist **")
             return
