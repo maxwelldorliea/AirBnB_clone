@@ -1,5 +1,4 @@
-#!/bin/python3
-
+#!/usr/bin/python3
 """This is the City Module."""
 
 from models.base_model import BaseModel

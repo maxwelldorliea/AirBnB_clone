@@ -1,5 +1,4 @@
-#!/bin/python3
-
+#!/usr/bin/python3
 """This is the File Storage Engine Model."""
 
 import json

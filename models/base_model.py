@@ -1,5 +1,4 @@
-#!/bin/python3
-
+#!/usr/bin/python3
 """This is the Base Model For All Models."""
 
 from datetime import datetime as dtime
