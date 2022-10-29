@@ -13,6 +13,10 @@ class TestBaseModel(unittest.TestCase):
         self.objs_dict = self.b1.to_dict()
         self.created_at = self.objs_dict['created_at']
         self.updated_at = self.objs_dict['updated_at']
+        self.b1.save()
+        self.obj = self.b1.to_dict()
+        self.update = self.obj['updated_at']
+        self.create = self.obj['created_at']
 
     def test_id(self):
         """Test if id is unique."""
@@ -42,10 +46,14 @@ class TestBaseModel(unittest.TestCase):
         """Test if updated_at is a datetime."""
         self.assertIsInstance(self.b1.created_at, dtime)
     
-    def test_dtime_update_on_save(self):
+    def test_dtime_updated_at_on_save(self):
         """Test if updated_at is a updated on save."""
-        update = self.objs_dict['updated_at']
-        self.b1.save()
-        obj = self.b1.to_dict()
-        updated_at = obj['updated_at']
-        self.assertNotEqual(update, updated_at)
+        self.assertNotEqual(self.update, self.updated_at)
+    
+    def test_dtime_created_at_on_save(self):
+        """Test if created_at is a updated on save."""
+        self.assertEqual(self.create, self.created_at)
+
+    def test_inst_is_base_model(self):
+        """Test if b1 is instance of BaseModel."""
+        self.assertIsInstance(self.b1, base_model.BaseModel)
