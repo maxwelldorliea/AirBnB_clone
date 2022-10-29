@@ -47,5 +47,5 @@ class FileStorage:
                         name = obj['__class__']
                         base = eval(f"{name}(**obj)")
                         self.new(base)
-        except Exception as err:
-            print(err)
+        except Exception:
+            pass
