@@ -13,6 +13,10 @@ class TestBaseModel(unittest.TestCase):
         self.objs_dict = self.b1.to_dict()
         self.created_at = self.objs_dict['created_at']
         self.updated_at = self.objs_dict['updated_at']
+        self.objs = self.b1.__dict__.copy()
+        self.objs['__class__'] = self.b1.__class__.__name__
+        self.objs['created_at'] = self.objs['created_at'].isoformat()
+        self.objs['updated_at'] = self.objs['updated_at'].isoformat()
         self.b1.save()
         self.obj = self.b1.to_dict()
         self.update = self.obj['updated_at']
@@ -61,3 +65,10 @@ class TestBaseModel(unittest.TestCase):
     def test_id_is_str(self):
         """Test if id is a str."""
         self.assertIsInstance(self.b1.id, str)
+
+    def test_dict(self):
+        """
+        Test if instance.__dict.__ plus.
+        __class__ : instance class_name equal to_dict.
+        """
+        self.assertEqual(self.objs, self.objs_dict)
