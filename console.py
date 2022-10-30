@@ -22,7 +22,7 @@ class HBNBCommand(cmd.Cmd):
     def parse_input(self, cmd):
         """Parse string pass to it."""
         arg = cmd.replace('(', ' ').replace('"', '').replace("'", "")
-        arg = arg.replace('.', ' ').replace(')', '').replace(",", "")
+        arg = arg.replace('.', ' ').replace(')', '')
         return arg
 
     def emptyline(self) -> None:
@@ -143,10 +143,14 @@ class HBNBCommand(cmd.Cmd):
 
     def do_update(self, line):
         """Update an instance of a supported model from our file storage."""
-        arg1 = line.replace('update', '').replace('(', '').replace(')', '')
-        arg1 = arg1.replace('.', ' ').split(maxsplit=2)
-        line = self.parse_input(line).replace('update', '').split()
-        arg = line if len(line) > 3 else arg1
+        arg = self.parse_input(line).replace('update', '').split(maxsplit=3)
+        cnvt = {
+                "int" : int,
+                "float" : float,
+                "str" : str,
+                "dict" : self.to_dict,
+                "list" : self.to_list
+            }
         try:
             with open('file.json', 'r', encoding='utf-8') as f:
                 objs = json.loads(f.read())
@@ -158,25 +162,19 @@ class HBNBCommand(cmd.Cmd):
                 print("** instance id missing **")
             elif arg[0] + '.' + self.parse_input(arg[1]) not in objs:
                 print("** no instance found **")
-            elif len(arg) == 3:
-                try:
-                    new_obj = json.loads(arg[-1].replace("'", '"'))
-                    key = arg[0] + '.' + self.parse_input(arg[1])
-                    obj = objs[key]
-                    for k in new_obj:
-                        obj[k] = new_obj[k]
-                    with open('file.json', 'w', encoding='utf-8') as f:
-                        json.dump(objs, f, indent=4)
-                    return
-                except Exception:
-                    pass
             elif len(arg) < 3:
                 print("** attribute name missing **")
             elif len(arg) < 4:
                 print("** value missing **")
             else:
+                inst = eval(f'{arg[0]}()')
                 k, val = arg[2], arg[3].replace('"', '').replace("'", "")
                 key = arg[0] + '.' + self.parse_input(arg[1])
+                typ = type(getattr(inst, k, None))
+                if typ:
+                    if typ.__name__ in cnvt:
+                        func = cnvt[typ.__name__]
+                        val = func(val)
                 obj = objs[key]
                 obj[k] = val
                 with open('file.json', 'w', encoding='utf-8') as f:
@@ -206,6 +204,15 @@ class HBNBCommand(cmd.Cmd):
         except Exception:
             pass
 
+    def to_dict(self, obj):
+        """Convert @obj to dict."""
+        return eval(obj)
+
+    def to_list(self, lst):
+        """Convert @lst to list."""
+        lst = [str(v) for v in eval(lst)]
+        print(lst)
+        return lst
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
