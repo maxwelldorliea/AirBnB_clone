@@ -21,6 +21,7 @@ class TestBaseModel(unittest.TestCase):
         self.obj = self.b1.to_dict()
         self.update = self.obj['updated_at']
         self.create = self.obj['created_at']
+        self.to_str = f'[BaseModel] ({self.b1.id}) {self.b1.__dict__}'
 
     def test_id(self):
         """Test if id is unique."""
@@ -72,3 +73,7 @@ class TestBaseModel(unittest.TestCase):
         __class__ : instance class_name equal to_dict.
         """
         self.assertEqual(self.objs, self.objs_dict)
+
+    def test_to_str(self):
+        """Test __str__ method of BaseModel."""
+        self.assertEqual(self.to_str, str(self.b1))
