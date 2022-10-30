@@ -21,7 +21,7 @@ class HBNBCommand(cmd.Cmd):
 
     def parse_input(self, cmd):
         """Parse string pass to it."""
-        arg = cmd.replace('(', ' ').replace('"', '').replace("'", "")
+        arg = cmd.replace('(', ' ').replace('"', '', -3).replace("'", "")
         arg = arg.replace('.', ' ', 1).replace(')', '')
         return arg
 
@@ -145,13 +145,12 @@ class HBNBCommand(cmd.Cmd):
         """Update an instance of a supported model from our file storage."""
         if ')' in line:
             line = line.replace(',', '', 2)
-        arg = self.parse_input(line).replace('update', '').split(maxsplit=3)
+        arg = line.replace(')', '').replace('.', ' ').replace('(', '')
+        arg = arg.replace('update', '').split(maxsplit=3)
         cnvt = {
                 "int" : int,
                 "float" : float,
                 "str" : str,
-                "dict" : self.to_dict,
-                "list" : self.to_list
             }
         try:
             with open('file.json', 'r', encoding='utf-8') as f:
@@ -209,12 +208,6 @@ class HBNBCommand(cmd.Cmd):
     def to_dict(self, obj):
         """Convert @obj to dict."""
         return eval(obj)
-
-    def to_list(self, lst):
-        """Convert @lst to list."""
-        lst = [str(v) for v in eval(lst)]
-        print(lst)
-        return lst
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
