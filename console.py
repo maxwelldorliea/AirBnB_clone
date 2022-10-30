@@ -181,8 +181,8 @@ class HBNBCommand(cmd.Cmd):
                 obj[k] = val
                 with open('file.json', 'w', encoding='utf-8') as f:
                     json.dump(objs, f, indent=4)
-        except Exception as err:
-            print(err)
+        except Exception:
+            pass
 
     def count(self, line):
         """
