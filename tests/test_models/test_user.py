@@ -1,6 +1,6 @@
 import unittest
 from datetime import datetime as dtime
-from models import user
+from models import user, BaseModel
 
 """User Model Unittest Module."""
 
@@ -60,7 +60,7 @@ class TestBaseModel(unittest.TestCase):
 
     def test_inst_is_user(self):
         """Test if b1 is instance of User."""
-        self.assertIsInstance(self.b1, user.User)
+        self.assertIsInstance(self.b1, BaseModel)
 
     def test_id_is_str(self):
         """Test if id is a str."""
