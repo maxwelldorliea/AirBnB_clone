@@ -143,6 +143,8 @@ class HBNBCommand(cmd.Cmd):
 
     def do_update(self, line):
         """Update an instance of a supported model from our file storage."""
+        if ')' in line:
+            line = line.replace(',', '')
         arg = self.parse_input(line).replace('update', '').split(maxsplit=3)
         cnvt = {
                 "int" : int,
