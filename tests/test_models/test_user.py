@@ -26,6 +26,22 @@ class TestBaseModel(unittest.TestCase):
         """Test if id is unique."""
         self.assertNotEqual(self.u1.id, self.u2.id)
 
+    def test_email(self):
+        """Test if email exist."""
+        self.assertTrue(hasattr(self.u1, 'email'))
+
+    def test_email_empty(self):
+        """Test if email is empty."""
+        self.assertEqual(self.u1.email, '')
+    
+    def test_password(self):
+        """Test if password exist."""
+        self.assertTrue(hasattr(self.u1, 'password'))
+    
+    def test_password_empty(self):
+        """Test if password is empty."""
+        self.assertEqual(self.u1.password, '')
+
     def test_names(self):
         """Test if first and last names exist."""
         self.assertTrue(hasattr(self.u1, 'first_name'))
@@ -44,8 +60,8 @@ class TestBaseModel(unittest.TestCase):
         """Test if __class__ is in dict return by to_dict."""
         self.assertIn("__class__", self.objs_dict.keys())
 
-    def test_inst_is_user(self):
-        """Test if u1 is instance of User."""
+    def test_inst_is_base_model(self):
+        """Test if u1 is instance of BaseModel."""
         self.assertIsInstance(self.u1, BaseModel)
 
     def test_id_is_str(self):
