@@ -22,7 +22,7 @@ class HBNBCommand(cmd.Cmd):
     def parse_input(self, cmd):
         """Parse string pass to it."""
         arg = cmd.replace('(', ' ').replace('"', '').replace("'", "")
-        arg = arg.replace('.', ' ').replace(')', '')
+        arg = arg.replace('.', ' ', 1).replace(')', '')
         return arg
 
     def emptyline(self) -> None:
@@ -144,7 +144,7 @@ class HBNBCommand(cmd.Cmd):
     def do_update(self, line):
         """Update an instance of a supported model from our file storage."""
         if ')' in line:
-            line = line.replace(',', '')
+            line = line.replace(',', '', 2)
         arg = self.parse_input(line).replace('update', '').split(maxsplit=3)
         cnvt = {
                 "int" : int,
@@ -181,8 +181,8 @@ class HBNBCommand(cmd.Cmd):
                 obj[k] = val
                 with open('file.json', 'w', encoding='utf-8') as f:
                     json.dump(objs, f, indent=4)
-        except Exception:
-            pass
+        except Exception as err:
+            print(err)
 
     def count(self, line):
         """
