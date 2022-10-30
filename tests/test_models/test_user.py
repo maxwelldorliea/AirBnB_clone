@@ -8,31 +8,33 @@ class TestBaseModel(unittest.TestCase):
     """Represent the test model for User Model."""
 
     def setUp(self):
-        self.b1 = user.User()
-        self.b2 = user.User()
-        self.objs_dict = self.b1.to_dict()
+        self.u1 = user.User()
+        self.u2 = user.User()
+        self.objs_dict = self.u1.to_dict()
         self.created_at = self.objs_dict['created_at']
         self.updated_at = self.objs_dict['updated_at']
-        self.objs = self.b1.__dict__.copy()
-        self.objs['__class__'] = self.b1.__class__.__name__
+        self.objs = self.u1.__dict__.copy()
+        self.objs['__class__'] = self.u1.__class__.__name__
         self.objs['created_at'] = self.objs['created_at'].isoformat()
         self.objs['updated_at'] = self.objs['updated_at'].isoformat()
-        self.b1.save()
-        self.obj = self.b1.to_dict()
+        self.u1.save()
+        self.obj = self.u1.to_dict()
         self.update = self.obj['updated_at']
         self.create = self.obj['created_at']
 
     def test_id(self):
         """Test if id is unique."""
-        self.assertNotEqual(self.b1.id, self.b2.id)
+        self.assertNotEqual(self.u1.id, self.u2.id)
 
-    def test_dict_created_at(self):
-        """Test if created_at is a str."""
-        self.assertIsInstance(self.created_at, str)
-    
-    def test_dict_updated_at(self):
-        """Test if updated_at is a str."""
-        self.assertIsInstance(self.updated_at, str)
+    def test_names(self):
+        """Test if first and last names exist."""
+        self.assertTrue(hasattr(self.u1, 'first_name'))
+        self.assertTrue(hasattr(self.u1, 'last_name'))
+
+    def test_names_empty(self):
+        """Test if first and last names are empty."""
+        self.assertEqual(self.u1.first_name, '')
+        self.assertEqual(self.u1.last_name, '')
 
     def test_to_dict(self):
         """Test if to_dict return a dict."""
@@ -41,30 +43,14 @@ class TestBaseModel(unittest.TestCase):
     def test_class_name(self):
         """Test if __class__ is in dict return by to_dict."""
         self.assertIn("__class__", self.objs_dict.keys())
-    
-    def test_dtime_updated_at(self):
-        """Test if updated_at is a datetime."""
-        self.assertIsInstance(self.b1.updated_at, dtime)
-    
-    def test_dtime_created_at(self):
-        """Test if updated_at is a datetime."""
-        self.assertIsInstance(self.b1.created_at, dtime)
-    
-    def test_dtime_updated_at_on_save(self):
-        """Test if updated_at is a updated on save."""
-        self.assertNotEqual(self.update, self.updated_at)
-    
-    def test_dtime_created_at_on_save(self):
-        """Test if created_at is a updated on save."""
-        self.assertEqual(self.create, self.created_at)
 
     def test_inst_is_user(self):
-        """Test if b1 is instance of User."""
-        self.assertIsInstance(self.b1, BaseModel)
+        """Test if u1 is instance of User."""
+        self.assertIsInstance(self.u1, BaseModel)
 
     def test_id_is_str(self):
         """Test if id is a str."""
-        self.assertIsInstance(self.b1.id, str)
+        self.assertIsInstance(self.u1.id, str)
 
     def test_dict(self):
         """
