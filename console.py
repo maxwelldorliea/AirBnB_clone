@@ -36,7 +36,7 @@ class HBNBCommand(cmd.Cmd):
                 'count': self.count,
                 'show': self.do_show,
                 'destroy': self.do_destroy,
-                'update': self.do_update
+                'update': self.get_update
             }
         arg = self.parse_input(line).split()
 
@@ -178,6 +178,54 @@ class HBNBCommand(cmd.Cmd):
                         val = func(val)
                 obj = objs[key]
                 obj[k] = val
+                with open('file.json', 'w', encoding='utf-8') as f:
+                    json.dump(objs, f, indent=4)
+        except Exception:
+            pass
+
+    def get_update(self, line):
+        """Call the rightful Update Method."""
+        if '{' in line and '}' in line:
+            self.update_dict(line)
+        else:
+            self.do_update(line)
+
+    def update_dict(self, line):
+        """Update any model instance using dictionary."""
+        arg = line.replace(')', '').replace('.', ' ').replace('(', '')
+        arg = arg.replace('update', '').replace(',', '', 1).split(maxsplit=2)
+        cnvt = {
+                "int" : int,
+                "float" : float,
+                "str" : str,
+            }
+        
+        try:
+            with open('file.json', 'r', encoding='utf-8') as f:
+                objs = json.loads(f.read())
+            if not line:
+                print('** class name missing **')
+            elif arg[0] not in self.class_name:
+                print("** class doesn't exist **")
+            elif len(arg) < 2:
+                print("** instance id missing **")
+            elif arg[0] + '.' + self.parse_input(arg[1]) not in objs:
+                print("** no instance found **")
+            elif len(arg) < 3:
+                print("** dict missing **")
+            else:
+                inst = eval(f'{arg[0]}()')
+                obj_dict = eval(arg[2].replace("'", '"'))
+                key = arg[0] + '.' + self.parse_input(arg[1])
+                obj = objs[key]
+
+                for k, val in obj_dict.items():
+                    typ = type(getattr(inst, k, None))
+                    if typ:
+                        if typ.__name__ in cnvt:
+                            func = cnvt[typ.__name__]
+                            val = func(val)
+                    obj[k] = val
                 with open('file.json', 'w', encoding='utf-8') as f:
                     json.dump(objs, f, indent=4)
         except Exception:
