@@ -11,7 +11,7 @@ class Place(BaseModel):
     user_id: str = ''
     name: str = ''
     description: str = ''
-    number_room: int = 0
+    number_rooms: int = 0
     number_bathrooms: int = 0
     max_guest: int = 0
     price_by_night: int = 0
