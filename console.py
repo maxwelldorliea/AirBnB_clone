@@ -9,6 +9,7 @@ from models.city import City
 from models.amenity import Amenity
 from models.place import Place
 from models.review import Review
+from models import storage
 
 
 class HBNBCommand(cmd.Cmd):
@@ -148,26 +149,26 @@ class HBNBCommand(cmd.Cmd):
         arg = line.replace(')', '').replace('.', ' ').replace('(', '')
         arg = arg.replace('update', '').split(maxsplit=3)
         cnvt = {
-                "int" : int,
-                "float" : float,
-                "str" : str,
+                "int": int,
+                "float": float,
+                "str": str,
             }
         try:
-            with open('file.json', 'r', encoding='utf-8') as f:
-                objs = json.loads(f.read())
             if not line:
                 print('** class name missing **')
             elif arg[0] not in self.class_name:
                 print("** class doesn't exist **")
             elif len(arg) < 2:
                 print("** instance id missing **")
-            elif arg[0] + '.' + self.parse_input(arg[1]) not in objs:
+            elif arg[0] + '.' + self.parse_input(arg[1]) not in storage.all():
                 print("** no instance found **")
             elif len(arg) < 3:
                 print("** attribute name missing **")
             elif len(arg) < 4:
                 print("** value missing **")
             else:
+                with open('file.json', 'r', encoding='utf-8') as f:
+                    objs = json.loads(f.read())
                 inst = eval(f'{arg[0]}()')
                 k, val = arg[2], arg[3].replace('"', '').replace("'", "")
                 key = arg[0] + '.' + self.parse_input(arg[1])
@@ -180,8 +181,8 @@ class HBNBCommand(cmd.Cmd):
                 obj[k] = val
                 with open('file.json', 'w', encoding='utf-8') as f:
                     json.dump(objs, f, indent=4)
-        except Exception:
-            pass
+        except Exception as err:
+            print(err)
 
     def get_update(self, line):
         """Call the rightful Update Method."""
@@ -195,25 +196,25 @@ class HBNBCommand(cmd.Cmd):
         arg = line.replace(')', '').replace('.', ' ').replace('(', '')
         arg = arg.replace('update', '').replace(',', '', 1).split(maxsplit=2)
         cnvt = {
-                "int" : int,
-                "float" : float,
-                "str" : str,
+                "int": int,
+                "float": float,
+                "str": str,
             }
-        
+
         try:
-            with open('file.json', 'r', encoding='utf-8') as f:
-                objs = json.loads(f.read())
             if not line:
                 print('** class name missing **')
             elif arg[0] not in self.class_name:
                 print("** class doesn't exist **")
             elif len(arg) < 2:
                 print("** instance id missing **")
-            elif arg[0] + '.' + self.parse_input(arg[1]) not in objs:
+            elif arg[0] + '.' + self.parse_input(arg[1]) not in storage.all():
                 print("** no instance found **")
             elif len(arg) < 3:
                 print("** dict missing **")
             else:
+                with open('file.json', 'r', encoding='utf-8') as f:
+                    objs = json.loads(f.read())
                 inst = eval(f'{arg[0]}()')
                 obj_dict = eval(arg[2].replace("'", '"'))
                 key = arg[0] + '.' + self.parse_input(arg[1])
@@ -256,6 +257,7 @@ class HBNBCommand(cmd.Cmd):
     def to_dict(self, obj):
         """Convert @obj to dict."""
         return eval(obj)
+
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
