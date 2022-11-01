@@ -6,7 +6,6 @@ from models.city import City
 import unittest
 
 
-
 class TestCity(unittest.TestCase):
     """Implement unittest for City."""
 
@@ -21,7 +20,7 @@ class TestCity(unittest.TestCase):
     def test_name_empty(self):
         """Test attribute name is empty."""
         self.assertEqual(self.c1.name, '')
-    
+
     def test_state_id(self):
         """Test if  City has attribute state_id."""
         self.assertTrue(hasattr(self.c1, 'state_id'))
@@ -29,7 +28,6 @@ class TestCity(unittest.TestCase):
     def test_state_id_empty(self):
         """Test attribute state_id is empty."""
         self.assertEqual(self.c1.state_id, '')
-
 
     def test_issubclass_base_model(self):
         """Test if City is subclass of BaseModel."""

@@ -6,7 +6,6 @@ from models.state import State
 import unittest
 
 
-
 class TestState(unittest.TestCase):
     """Implement unittest for State."""
 

@@ -4,6 +4,7 @@ from models import user, BaseModel
 
 """User Model Unittest Module."""
 
+
 class TestBaseModel(unittest.TestCase):
     """Represent the test model for User Model."""
 
@@ -33,11 +34,11 @@ class TestBaseModel(unittest.TestCase):
     def test_email_empty(self):
         """Test if email is empty."""
         self.assertEqual(self.u1.email, '')
-    
+
     def test_password(self):
         """Test if password exist."""
         self.assertTrue(hasattr(self.u1, 'password'))
-    
+
     def test_password_empty(self):
         """Test if password is empty."""
         self.assertEqual(self.u1.password, '')

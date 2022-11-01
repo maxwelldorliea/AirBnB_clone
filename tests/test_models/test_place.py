@@ -6,7 +6,6 @@ from models.place import Place
 import unittest
 
 
-
 class TestPlace(unittest.TestCase):
     """Implement unittest for Place."""
 
@@ -85,7 +84,7 @@ class TestPlace(unittest.TestCase):
     def test_user_id_empty(self):
         """Test attribute user_id is empty."""
         self.assertEqual(self.p1.user_id, '')
-    
+
     def test_city_id(self):
         """Test if  Place has attribute city_id."""
         self.assertTrue(hasattr(self.p1, 'city_id'))
