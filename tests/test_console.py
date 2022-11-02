@@ -4,6 +4,7 @@
 
 import unittest
 import sys
+import os
 from io import StringIO
 from unittest.mock import patch
 from console import HBNBCommand
@@ -19,6 +20,13 @@ from models import storage
 
 class TestConsole(unittest.TestCase):
     """Implement Unittest for the console."""
+
+    def tearDown(self) -> None:
+        """Remove file.json After every test case."""
+        try:
+            os.remove('file.json')
+        except Exception:
+            pass
 
     def test_help(self):
         """Test the help method."""
@@ -206,6 +214,19 @@ EOF  all  create  destroy  help  quit  show  update
         with patch('sys.stdout', new=StringIO()) as f:
             fmt = ".update(" + id + ", {'attribute_name': 'string_value'})"
             HBNBCommand().onecmd('Review' + fmt)
+            self.assertEqual('', f.getvalue())
+
+    def test_update_basemodel_models(self):
+        """Test if all each model can be updated."""
+        # class_name = ['BaseModel', 'City', 'State', 'Place']
+        # class_name += ['Review', 'Amenity']
+
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd(f"create BaseModel")
+            id = f.getvalue().replace('\n', '')
+        with patch('sys.stdout', new=StringIO()) as f:
+            fmt = ".update(" + id + ", {'attribute_name': 'string_value'})"
+            HBNBCommand().onecmd('BaseModel' + fmt)
             self.assertEqual('', f.getvalue())
 
     def test_count_def_models(self):
