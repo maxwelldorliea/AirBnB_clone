@@ -252,7 +252,7 @@ class HBNBCommand(cmd.Cmd):
                     cnt += 1
             print(cnt)
         except Exception:
-            pass
+            print(cnt)
 
     def to_dict(self, obj):
         """Convert @obj to dict."""

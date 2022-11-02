@@ -209,6 +209,7 @@ EOF  all  create  destroy  help  quit  show  update
                     # nme = k[:k.index('.')]
                     if name in k:
                         cnt += 1
+                print(name)
                 self.assertEqual(f'{str(cnt)}\n', cmd_cnt)
 
     def test_show_def_with_wrong_model_fail(self):
