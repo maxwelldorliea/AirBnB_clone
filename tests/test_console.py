@@ -2,6 +2,7 @@
 
 """This is Console Test Module."""
 
+import json
 import unittest
 import sys
 import os
@@ -202,6 +203,14 @@ EOF  all  create  destroy  help  quit  show  update
                 fmt = ".update(" + id + ", {'attribute_name': 'string_value'})"
                 HBNBCommand().onecmd(name + fmt)
                 self.assertEqual('', f.getvalue())
+                storage.reload()
+                key = f'{name}.{id}'
+                with open('file.json', 'r', encoding='utf-8') as f:
+                    dict_obj = json.loads(f.read())
+                obj = dict_obj[key]
+                self.assertIn('attribute_name', obj)
+                self.assertEqual(obj['attribute_name'], 'string_value')
+
 
     def test_update_review_models(self):
         """Test if all each model can be updated."""
