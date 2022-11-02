@@ -17,10 +17,6 @@ class TestFileStorage(unittest.TestCase):
         self.base = BaseModel()
         self.storage.new(self.base)
 
-    def jtest_attr_file_path(self):
-        """Test if FileStorage has attribute __file_path."""
-        self.assertTrue(hasattr(self.storage, '__file_path'))
-
     def test_all(self):
         """Test if the all method return dict."""
         self.assertIsInstance(self.storage.all(), dict)
