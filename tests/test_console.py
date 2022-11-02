@@ -215,7 +215,7 @@ EOF  all  create  destroy  help  quit  show  update
     def test_update_review_models(self):
         """Test if all each model can be updated."""
         # class_name = ['BaseModel', 'City', 'State', 'Place']
-        # class_name += ['Review', 'Amenity']
+        # class_name += ['Review', 'Amenity', 'User']
 
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd(f"create Review")
@@ -266,7 +266,7 @@ EOF  all  create  destroy  help  quit  show  update
     def test_show_def_without_inst_id_fail(self):
         """Test if show without inst id fails."""
         class_name = ['BaseModel', 'City', 'State', 'Place']
-        class_name += ['Review', 'Amenity']
+        class_name += ['Review', 'Amenity', 'User']
         expected = "** instance id missing **\n"
 
         for name in class_name:
@@ -295,7 +295,7 @@ EOF  all  create  destroy  help  quit  show  update
     def test_destroy_def_without_inst_id_fail(self):
         """Test if destroy without inst id fails."""
         class_name = ['BaseModel', 'City', 'State', 'Place']
-        class_name += ['Review', 'Amenity']
+        class_name += ['Review', 'Amenity', 'User']
         expected = "** instance id missing **\n"
 
         for name in class_name:
@@ -306,7 +306,7 @@ EOF  all  create  destroy  help  quit  show  update
     def test_destroy_def_with_wrong_inst_id_fail(self):
         """Test if destroy with wrong inst id fails."""
         class_name = ['BaseModel', 'City', 'State', 'Place']
-        class_name += ['Review', 'Amenity']
+        class_name += ['Review', 'Amenity', 'User']
         expected = "** no instance found **\n"
 
         for name in class_name:
@@ -317,7 +317,7 @@ EOF  all  create  destroy  help  quit  show  update
     def test_def_all_model(self):
         """Test if all return list of all instances of a model."""
         class_name = ['BaseModel', 'City', 'State', 'Place']
-        class_name += ['Review', 'Amenity']
+        class_name += ['Review', 'Amenity', 'User']
 
         for name in class_name:
             with patch('sys.stdout', new=StringIO()) as f:
