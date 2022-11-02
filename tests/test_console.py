@@ -195,6 +195,19 @@ EOF  all  create  destroy  help  quit  show  update
                 HBNBCommand().onecmd(name + fmt)
                 self.assertEqual('', f.getvalue())
 
+    def test_update_review_models(self):
+        """Test if all each model can be updated."""
+        # class_name = ['BaseModel', 'City', 'State', 'Place']
+        # class_name += ['Review', 'Amenity']
+
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd(f"create Review")
+            id = f.getvalue().replace('\n', '')
+        with patch('sys.stdout', new=StringIO()) as f:
+            fmt = ".update(" + id + ", {'attribute_name': 'string_value'})"
+            HBNBCommand().onecmd('Review' + fmt)
+            self.assertEqual('', f.getvalue())
+
     def test_count_def_models(self):
         """Test if method count return the total instance of each model."""
         class_name = ['BaseModel', 'City', 'State', 'Place']
