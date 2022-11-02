@@ -5,7 +5,6 @@
 import json
 import unittest
 import sys
-import os
 from io import StringIO
 from unittest.mock import patch
 from console import HBNBCommand
@@ -21,13 +20,6 @@ from models import storage
 
 class TestConsole(unittest.TestCase):
     """Implement Unittest for the console."""
-
-    def tearDown(self) -> None:
-        """Remove file.json After every test case."""
-        try:
-            os.remove('file.json')
-        except Exception:
-            pass
 
     def test_help(self):
         """Test the help method."""
