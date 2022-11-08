@@ -68,11 +68,10 @@
 	left: 0;
 }
 
+
 .filters .amenities .popover {
 	left: 30%;
-	margin-left: 5%;
 }
-
 .filters .locations:hover .popover, .filters .amenities:hover .popover {
 	visibility: visible;
 }
